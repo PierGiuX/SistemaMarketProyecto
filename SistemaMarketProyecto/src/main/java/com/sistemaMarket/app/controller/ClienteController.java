@@ -51,7 +51,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/editar/{id}")
-	public String EditarCliente(@PathVariable Long id, Model model) {
+	public String editarCliente(@PathVariable Long id, Model model) {
 		Cliente cliente = clienteService.obtenerClientePorId(id);
 		if (cliente != null) {
 			model.addAttribute("cliente", cliente);
