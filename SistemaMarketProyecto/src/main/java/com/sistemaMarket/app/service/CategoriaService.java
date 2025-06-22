@@ -22,4 +22,21 @@ public class CategoriaService {
 	public Categoria obtenerCategoriaPorId(int id) {
 		return categoriaRepository.findById(id).orElse(null);
 	}
+	
+	public Categoria guardarCategoria (Categoria categoria) {
+		return categoriaRepository.save(categoria);
+	}
+	
+	public void eliminarCategoria (Integer id) {
+		categoriaRepository.deleteById(id);
+	}
+	
+	public Categoria actualizarCategoria(Integer id, Categoria categoriaActualizada) {
+		Categoria existente = categoriaRepository.findById(id).orElse(null);
+		if (existente != null) {
+			existente.setNombre(categoriaActualizada.getNombre());
+			return categoriaRepository.save(existente);
+		}
+		return null; // O PUEDES LANZAR UNA EXCEPCION PERSONALIZADA SI PREFIERES
+	}
 }
