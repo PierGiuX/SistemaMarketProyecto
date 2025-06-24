@@ -14,10 +14,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "PRODUCTO")
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_Producto")
-    private Integer id_producto;
+    private Integer idProducto;
 
     @Column(name = "Codigo_inventario", length = 12)
     private String codigoInventario;
@@ -33,13 +34,12 @@ public class Producto {
     private BigDecimal precio;
 
     @Column(name = "Stock", nullable = false)
-    private int stock = 0;
+    private Integer stock;
 
     public Producto() {
     }
 
-    public Producto(Integer id_producto, String codigoInventario, String descripcion, Categoria categoria, BigDecimal precio, int stock) {
-        this.id_producto = id_producto;
+    public Producto(String codigoInventario, String descripcion, Categoria categoria, BigDecimal precio, Integer stock) {
         this.codigoInventario = codigoInventario;
         this.descripcion = descripcion;
         this.categoria = categoria;
@@ -47,55 +47,54 @@ public class Producto {
         this.stock = stock;
     }
 
-	public Integer getId_producto() {
-		return id_producto;
-	}
+    public Integer getIdProducto() {
+        return idProducto;
+    }
 
-	public void setId_producto(Integer id_producto) {
-		this.id_producto = id_producto;
-	}
+    public void setIdProducto(Integer idProducto) {
+        this.idProducto = idProducto;
+    }
 
-	public String getCodigoInventario() {
-		return codigoInventario;
-	}
+    public String getCodigoInventario() {
+        return codigoInventario;
+    }
 
-	public void setCodigoInventario(String codigoInventario) {
-		this.codigoInventario = codigoInventario;
-	}
+    public void setCodigoInventario(String codigoInventario) {
+        this.codigoInventario = codigoInventario;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 
-	public BigDecimal getPrecio() {
-		return precio;
-	}
+    public BigDecimal getPrecio() {
+        return precio;
+    }
 
-	public void setPrecio(BigDecimal precio) {
-		this.precio = precio;
-	}
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
 
-	public int getStock() {
-		return stock;
-	}
+    public Integer getStock() {
+        return stock;
+    }
 
-	public void setStock(int stock) {
-        if (stock < 0) {
+    public void setStock(Integer stock) {
+    	if (stock < 0) {
             throw new IllegalArgumentException("El stock no puede ser negativo.");
         }
         this.stock = stock;
     }
-
 }

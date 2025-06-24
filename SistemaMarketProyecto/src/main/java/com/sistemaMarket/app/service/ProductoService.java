@@ -1,96 +1,51 @@
 package com.sistemaMarket.app.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sistemaMarket.app.model.Categoria;
 import com.sistemaMarket.app.model.Producto;
 import com.sistemaMarket.app.repository.ProductoRepository;
 
 @Service
 public class ProductoService {
 
-    private final ProductoRepository productoRepository;
-
-    public ProductoService(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
+    @Autowired
+    private ProductoRepository productoRepository;
 
     public List<Producto> listarProductos() {
         return productoRepository.findAll();
+    }
+
+    public Optional<Producto> buscarProductoPorId(Integer id) {
+        return productoRepository.findById(id);
     }
 
     public Producto guardarProducto(Producto producto) {
         return productoRepository.save(producto);
     }
 
-    public Producto guardarProductoNuevo(Producto producto, Categoria categoria, String seccion, String estante, String nivel) {
-        // Validaciones básicas
-        if (categoria == null || seccion == null || estante == null || nivel == null) {
-            throw new IllegalArgumentException("Categoría o ubicación inválida");
-        }
-
-        producto.setCategoria(categoria);
-        producto.setCodigoInventario("TEMP"); // Código temporal mientras obtenemos el ID
-        producto = productoRepository.save(producto); // Guardamos para obtener ID autogenerado
-
-        // Construir prefijo de categoría
-        String prefijo = switch (categoria.getNombre().toUpperCase()) {
-            case "BEBIDAS" -> "BEB";
-            case "CONDIMENTOS" -> "CON";
-            case "FRUTAS/VERDURAS" -> "FRU";
-            case "CARNES" -> "CAR";
-            case "PESCADO/MARISCO" -> "PES";
-            case "LACTEOS" -> "LAC";
-            case "REPOSTERIA" -> "REP";
-            case "GRANOS/CEREALES" -> "GRA";
-            default -> "XXX";
-        };
-
-        // Construir el código de inventario: PREFIJO-UBICACION-IDHEX
-        String ubicacion = (seccion + estante + nivel).toUpperCase();
-        String idHex = String.format("%04X", producto.getId_producto());
-        String codigoFinal = String.format("%s-%s-%s", prefijo, ubicacion, idHex);
-
-        producto.setCodigoInventario(codigoFinal);
-
-        return productoRepository.save(producto); // Guardamos nuevamente con el código real
-    }
-
-    public Producto obtenerProductoPorId(Integer id) {
-        return productoRepository.findById(id).orElse(null);
+    public Producto actualizarProducto(Producto producto) {
+        return productoRepository.save(producto);
     }
 
     public void eliminarProducto(Integer id) {
         productoRepository.deleteById(id);
     }
 
-    public Producto actualizarProducto(Integer id, Producto nuevoProducto) {
-        Producto productoExistente = productoRepository.findById(id).orElse(null);
+    // METODOS PERSONALIZADOS
 
-        if (productoExistente != null) {
-            productoExistente.setCodigoInventario(nuevoProducto.getCodigoInventario());
-            productoExistente.setDescripcion(nuevoProducto.getDescripcion());
-            productoExistente.setCategoria(nuevoProducto.getCategoria());
-            productoExistente.setPrecio(nuevoProducto.getPrecio());
-            productoExistente.setStock(nuevoProducto.getStock());
-
-            return productoRepository.save(productoExistente);
-        }
-
-        return null;
+    public List<Producto> buscarProductosPorCategoria(Integer idCategoria) {
+        return productoRepository.findByCategoria_IdCategoria(idCategoria);
     }
 
-    public List<Producto> buscarPorCategoria(int idCategoria) {
-        return productoRepository.findByCategoriaId(idCategoria);
+    public Optional<Producto> buscarProductoPorCodigo(String codigoInventario) {
+        return productoRepository.findByCodigoInventario(codigoInventario);
     }
 
-    public List<Producto> buscarPorCodigoInventario(String codigo) {
-        return productoRepository.findByCodigoInventarioContainingIgnoreCase(codigo);
-    }
-
-    public List<Producto> buscarPorDescripcion(String descripcion) {
+    public List<Producto> buscarProductosPorDescripcion(String descripcion) {
         return productoRepository.findByDescripcionContainingIgnoreCase(descripcion);
     }
 }
